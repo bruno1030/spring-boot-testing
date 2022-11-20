@@ -92,4 +92,32 @@ public class EmployeeRepositoryTests {
         assertThat(employeeDB.get().getFirstName()).isEqualTo("Bruno");
     }
 
+    // JUnit test for get Employee by email
+    @DisplayName("JUnit test for get Employee by email")
+    @Test
+    public void givenEmployeeEmail_whenFindByEmail_thenReturnEmployedObject(){
+        // given - precondition of setup
+        Employee employee1 = Employee.builder()
+                .firstName("Bruno")
+                .lastName("Martins")
+                .email("bruno@bruno")
+                .build();
+        employeeRepository.save(employee1);
+
+        Employee employee2 = Employee.builder()
+                .firstName("Lucas")
+                .lastName("Oliveira")
+                .email("lucas@lucas")
+                .build();
+        employeeRepository.save(employee2);
+
+        // when - action or the behaviour that we are going test
+        Employee employeeDB = employeeRepository.findByEmail(employee1.getEmail()).get();
+
+        // then - verify the output
+        assertThat(employeeDB.getFirstName()).isEqualTo("Bruno");
+        assertThat(employeeDB).isNotNull();
+
+    }
+
 }
