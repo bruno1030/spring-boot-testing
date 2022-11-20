@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 @DataJpaTest
 public class EmployeeRepositoryTests {
@@ -64,5 +65,31 @@ public class EmployeeRepositoryTests {
         assertThat(employeeList.size()).isEqualTo(2);
     }
 
+    // JUnit test for find employee by id
+    @DisplayName("JUnit test for find employee by id")
+    @Test
+    public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject(){
+        // given - precondition of setup
+        Employee employee1 = Employee.builder()
+                .firstName("Bruno")
+                .lastName("Martins")
+                .email("bruno@bruno")
+                .build();
+        employeeRepository.save(employee1);
+
+        Employee employee2 = Employee.builder()
+                .firstName("Lucas")
+                .lastName("Oliveira")
+                .email("lucas@lucas")
+                .build();
+        employeeRepository.save(employee2);
+
+        // when - action or the behaviour that we are going test
+        Optional<Employee> employeeDB = employeeRepository.findById(employee1.getId());
+
+        // then - verify the output
+        assertThat(employeeDB).isNotNull();
+        assertThat(employeeDB.get().getFirstName()).isEqualTo("Bruno");
+    }
 
 }
