@@ -117,7 +117,69 @@ public class EmployeeRepositoryTests {
         // then - verify the output
         assertThat(employeeDB.getFirstName()).isEqualTo("Bruno");
         assertThat(employeeDB).isNotNull();
+    }
 
+    @DisplayName("JUnit test for update Employee")
+    @Test
+    public void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee(){
+        // given - precondition of setup
+        Employee employee1 = Employee.builder()
+                .firstName("Bruno")
+                .lastName("Martins")
+                .email("bruno@bruno")
+                .build();
+        employeeRepository.save(employee1);
+
+        // when - action or the behaviour that we are going test
+        Employee savedEmployee = employeeRepository.findById(employee1.getId()).get();
+        savedEmployee.setLastName("Oliveira");
+        Employee updatedEmployee = employeeRepository.save(savedEmployee);
+
+        // then - verify the output
+        assertThat(updatedEmployee.getLastName()).isEqualTo("Oliveira");
+    }
+
+    @DisplayName("JUnit test for test delete an Employee object")
+    @Test
+    public void givenEmployee_whenDelete_thenRemoveEmployeeAndReturnNullObject(){
+        // given - precondition of setup
+        Employee employee1 = Employee.builder()
+                .firstName("Bruno")
+                .lastName("Martins")
+                .email("bruno@bruno")
+                .build();
+        employeeRepository.save(employee1);
+
+        // when - action or the behaviour that we are going test
+        employeeRepository.deleteById(employee1.getId());
+        Optional<Employee> employeeOptional = employeeRepository.findById(employee1.getId());
+
+        // then - verify the output
+        assertThat(employeeOptional).isEmpty();
+
+    }
+
+
+    // JUnit test for custom query using JPQL with index
+    @DisplayName("JUnit test for custom query using JPQL with index")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByJPQL_thenReturnEmployeeObject(){
+        // given - precondition of setup
+        Employee employee1 = Employee.builder()
+                .firstName("Bruno")
+                .lastName("Martins")
+                .email("bruno@bruno")
+                .build();
+        employeeRepository.save(employee1);
+
+        String firstName = "Bruno";
+        String lastName = "Martins";
+
+        // when - action or the behaviour that we are going test
+        Employee employeeDB = employeeRepository.findByJPQL(firstName, lastName);
+
+        // then - verify the output
+        assertThat(employeeDB).isNotNull();
     }
 
 }
